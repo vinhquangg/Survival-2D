@@ -6,8 +6,6 @@ public class BotSpawn : MonoBehaviour
     public Transform[] spawnPoints;
     public float spawnDelay = 2f;
 
-    private float timer = 2f;
-
     private void Start()
     {
         Debug.Log("[Spawner] Bắt đầu spawn bot");
@@ -27,7 +25,7 @@ public class BotSpawn : MonoBehaviour
     private void SpawnBotAtRandomPoint()
     {
         Debug.Log("[Spawner] Bắt đầu spawn bot tại điểm ngẫu nhiên");
-        Vector2 spawnPos = GenerateRandomSpawnPoint(-10f, 10f, -5f, 5f);
+        Vector2 spawnPos = GenerateSpawnInsideCamera();
         Debug.Log($"[Spawner] Vị trí spawn ngẫu nhiên: {spawnPos}");
         GameObject bot = PoolingManager.Instance.GetAvailableBot();
 
@@ -42,13 +40,22 @@ public class BotSpawn : MonoBehaviour
         }
     }
 
-    private Vector2 GenerateRandomSpawnPoint(float minX, float maxX, float minY, float maxY)
+    private Vector2 GenerateSpawnInsideCamera()
     {
-        float randomX = Random.Range(minX, maxX);
-        float randomY = Random.Range(minY, maxY);
-        Vector2 randomPoint = new Vector2(randomX, randomY);
+        Camera mainCamera = Camera.main;
 
-        Debug.Log($"[Spawner] Tạo điểm spawn ngẫu nhiên: {randomPoint}");
-        return randomPoint;
+        float cameraHeight = mainCamera.orthographicSize * 2;
+        float cameraWidth = cameraHeight * mainCamera.aspect;
+
+        Vector3 center = mainCamera.transform.position;
+
+        float minX = center.x - cameraWidth / 2f;
+        float maxX = center.x + cameraWidth / 2f;
+        float minY = center.y - cameraHeight / 2f;
+        float maxY = center.y + cameraHeight / 2f;
+
+        Vector2 pos = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+        Debug.Log($"[Spawner] Vị trí spawn trong camera: {pos}");
+        return pos;
     }
 }
