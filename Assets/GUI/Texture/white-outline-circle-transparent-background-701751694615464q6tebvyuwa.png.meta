@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      white-outline-circle-transparent-background-701751694615464q6tebvyuwa_0: 8274550945278816296
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

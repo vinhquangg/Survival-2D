@@ -15,13 +15,14 @@ public class TargetingBehavior : MonoBehaviour
     [HideInInspector] public float playerHealth = 0f;
     [HideInInspector] public bool playerIsAttacking = false;
 
-    private PlayerController playerScript;
+    private PlayerMovement playerScript;
 
     private void Start()
     {
-        if(player != null)
+        if(player == null)
         {
-            playerScript = player.GetComponent<PlayerController>();
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            playerScript = player.GetComponent<PlayerMovement>();
         }
     }
 
@@ -37,12 +38,12 @@ public class TargetingBehavior : MonoBehaviour
         isPlayerDetected = CheckPlayerVisible();
         Debug.Log("Is Player Detected: " + isPlayerDetected);
         //Take Data player
-        playerSpeed = playerScript.speed;
-        Debug.Log("Player Speed: " + playerSpeed);
-        playerHealth = playerScript.health;
-        Debug.Log("Player Health: " + playerHealth);
-        playerIsAttacking = playerScript.isAttacking;
-        Debug.Log("Player Is Attacking: " + playerIsAttacking);
+        //playerSpeed = playerScript.speed;
+        //Debug.Log("Player Speed: " + playerSpeed);
+        //playerHealth = playerScript.health;
+        //Debug.Log("Player Health: " + playerHealth);
+        //playerIsAttacking = playerScript.isAttacking;
+        //Debug.Log("Player Is Attacking: " + playerIsAttacking);
     }
 
     private bool CheckPlayerVisible()

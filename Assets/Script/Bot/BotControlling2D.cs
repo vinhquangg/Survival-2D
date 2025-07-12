@@ -1,73 +1,67 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BotControlling2D : MonoBehaviour
+public class BotControlling2D : MonoBehaviour, IDamageable
 {
     [Header("Bot Settings")]
-    public float speed = 2f;
     public int maxHealth = 1;
     private int currentHealth;
-    private Transform player;
-    private Rigidbody2D rb;
-    private Vector2 movement;
+
+    [Header("Targeting Settings")]
+    public MoveToPlayerBehavior moveToPlayerBehavior;
+    public IdleBehavior idleBehavior;
 
     public void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        rb = GetComponent<Rigidbody2D>();
+        moveToPlayerBehavior = GetComponent<MoveToPlayerBehavior>();
         currentHealth = maxHealth;
     }
 
     public void Update()
     {
-        if(player != null)
+        Debug.Log("Bắt đầu di chuyển");
+        if(moveToPlayerBehavior != null && moveToPlayerBehavior.targetingBehavior != null)
         {
-            Vector2 targetPos = new Vector2(player.position.x, player.position.y);
-            Vector2 direction = (targetPos - rb.position).normalized;
-            movement = direction;
+            Debug.Log("Bot đang di chuyển đến người chơi");
+            moveToPlayerBehavior.MoveToTarget();
         }
-    }
-
-    public void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + (speed * Time.fixedDeltaTime * movement));
-    }
-
-    public void ResetBot()
-    {
-        movement = Vector2.zero;
-        
-        if(rb != null)
+        else
         {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-            rb.position = transform.position; // Reset position
+            Debug.LogWarning("MoveToPlayerBehavior hoặc TargetingBehavior chưa được gán!");
         }
+
+    }
+    public void ResetBot() 
+    {
+        currentHealth = maxHealth;
+        if(moveToPlayerBehavior != null)
+        {
+            moveToPlayerBehavior.MoveToTarget();
+        }
+        Debug.Log("Bot đã được reset về trạng thái ban đầu.");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            TakeDamager(1);
+            TakeDamage(1);
             // Handle collision with player
             Debug.Log("Bot collided with player!");
         }
     }
-
-    public void TakeDamager(int damage)
+    private void Die() 
     {
-        damage = 100;
+        Debug.Log("Bot died!");
+        PoolingManager.Instance.RecycleBot(transform.gameObject);
+    }
+
+    public void TakeDamage(int damage)
+    {
         currentHealth -= damage;
         Debug.Log($"Bot took {damage} damage. Current health: {currentHealth}");
         if (currentHealth <= 0)
         {
             Die();
         }
-    }
-
-    private void Die() 
-    {
-        Debug.Log("Bot died!");
-        PoolingManager.Instance.RecycleBot(transform.parent.gameObject);
     }
 }

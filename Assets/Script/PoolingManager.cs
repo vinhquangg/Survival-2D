@@ -64,15 +64,10 @@ public class PoolingManager : MonoBehaviour
         else if (autoExpand) 
         {
             int previousCount = botQueue.Count;
-            CreateAndAddBot();
 
             if (botQueue.Count > previousCount)
             {
                 return GetAvailableBot();
-            }
-            else
-            {
-                Debug.LogError("[PoolingManager] Không thể tạo bot mới, BotPrefab có thể bị null.");
             }
         }
         return null;

@@ -45,7 +45,7 @@ public class MoveToPlayerBehavior : MonoBehaviour
         }
     }
 
-    private void MoveToTarget()
+    public void MoveToTarget()
     {
         if(targetingBehavior.player == null)
         {
