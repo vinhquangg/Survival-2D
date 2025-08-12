@@ -4,7 +4,7 @@ public class BotControlling2D : MonoBehaviour, IDamageable
 {
     [Header("Bot Settings")]
     public int maxHealth = 1;
-    private int currentHealth;
+    public int currentHealth;
 
     [Header("Targeting Settings")]
     public MoveToPlayerBehavior moveToPlayerBehavior;
@@ -19,7 +19,7 @@ public class BotControlling2D : MonoBehaviour, IDamageable
     public void Update()
     {
         Debug.Log("Bắt đầu di chuyển");
-        if(moveToPlayerBehavior != null && moveToPlayerBehavior.targetingBehavior != null)
+        if (moveToPlayerBehavior != null && moveToPlayerBehavior.targetingBehavior != null)
         {
             Debug.Log("Bot đang di chuyển đến người chơi");
             moveToPlayerBehavior.MoveToTarget();
@@ -52,12 +52,12 @@ public class BotControlling2D : MonoBehaviour, IDamageable
     private void Die() 
     {
         Debug.Log("Bot died!");
-        PoolingManager.Instance.RecycleBot(transform.gameObject);
+        PoolingManager.Instance.ReturnToPool("Bot", transform.gameObject);
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+       //currentHealth -= damage;
         Debug.Log($"Bot took {damage} damage. Current health: {currentHealth}");
         if (currentHealth <= 0)
         {

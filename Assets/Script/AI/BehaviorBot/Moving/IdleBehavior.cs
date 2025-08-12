@@ -2,15 +2,13 @@
 
 public class IdleBehavior : MonoBehaviour
 {
-    public MonoBehaviour targetingComponent; // Tham chiếu đến TargetingBehavior
-    public ITargetBehavior targetingBehavior;
+    public TargetingBehavior targeting; // Tham chiếu trực tiếp TargetingBehavior
     private Rigidbody2D rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         Debug.Log("[Awake] Rigidbody 2D đã được gán: " + (rb != null));
-        targetingBehavior = targetingComponent as ITargetBehavior;
     }
 
     private void Start()
@@ -20,13 +18,13 @@ public class IdleBehavior : MonoBehaviour
 
     private void CheckIdle()
     {
-        if(targetingBehavior == null || rb == null)
+        if(targeting == null || rb == null)
         {
             Debug.Log("[Update] targetingBehavior hoặc Rigidbody2D chưa được gán!");
             return;
         }
 
-        if (!targetingBehavior.IsPlayerDetected)
+        if (!targeting.IsPlayerDetected)
         {
             DoIdle();
         }
